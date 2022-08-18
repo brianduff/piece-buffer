@@ -28,7 +28,7 @@ test('Count lines', () => {
   Five`
 
   const editor = createEditor(text);
-  expect(editor.countLines()).toBe(5)
+  expect(editor.lineCount).toBe(5)
 })
 
 const text = `One

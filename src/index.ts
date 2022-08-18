@@ -19,32 +19,220 @@ interface Piece {
   offset: number,
   length: number
 }
+type PieceNode = Node<Piece>;
 
+/**
+ * A character offset.
+ */
 export type Offset = number;
+
+/**
+ * A position in the document by line and column number.
+ */
 export interface LineAndColumn {
+  /**
+   * The (zero based) line number.
+   */
   line: number;
+  /**
+   * The (zero based) column number.
+   */
   column: number;
 }
 
+/**
+ * A position within the document. This can be a character offset, or a line
+ * and column position.
+ */
 export type Position = Offset | LineAndColumn;
-type PieceNode = Node<Piece>;
 
-type LineAndLineNumber = [string, number];
+/**
+ * Returned by the iterator in {@link TextEditor.lines}
+ */
+export type LineAndLineNumber = [string, number];
+
+/**
+ * Returned by the iterator in {@link TextEditor.linesMatching}.
+ */
 export type MatchLineAndLineNumber = [RegExpMatchArray, string, number];
 
+/**
+ * Error thrown when a requested index is out of bounds.
+ */
+export class OutOfBoundsError extends Error {
+  constructor(pos: Position, currentLength: number, requestedLength?: number) {
+    super(`Position out of bounds: ${JSON.stringify(pos)} ${requestedLength ? "(len=" + requestedLength + ")" : ""}. Current length=${currentLength}`)
+  }
+}
+
+/**
+ * Error thrown when there is no current selection in a {@link Selection}.
+ */
+export class NoSelectionError extends Error {
+  constructor() {
+    super("No current selection")
+  }
+}
+
+/**
+ * Editing primitives for a block of text.
+ */
 export interface TextEditor {
+  /**
+   * Deletes characters starting at the given position.
+   *
+   * @param pos - the first offset to delete.
+   * @param len - the number of characters to delete.
+   *
+   * @throws {@link OutOfBoundsError} if `pos` is out of bounds, or `pos + len`
+   *    extends beyond the end of the document.
+   */
   delete: (pos: Position, len: number) => void;
+
+  /**
+   * Inserts a string at the given position.
+   *
+   * @param pos - the first offset to delete.
+   * @param text - the text to insert.
+   *
+   * @throws {@link OutOfBoundsError} if `pos` is out of bounds.
+   */
   insert: (pos: Position, text: string) => void;
+
+  /**
+   * Appends a string to the end of this editor.
+   *
+   * @param text - the text to append.
+   */
   append: (text: string) => void;
+
+  /**
+   * Returns a string representation of this editor.
+   */
   toString: () => string;
-  lines: (start?: number, pattern?: RegExp) => Iterable<LineAndLineNumber>;
+
+  /**
+   * Iterates over the lines in this document.
+   *
+   * @param start - an optional line number on which to start iterating.
+   * @param pattern - an optional regular expression or string. Only matching
+   *    lines will be returned by the iterator.
+   */
+  lines: (start?: number, pattern?: RegExp | string) => Iterable<LineAndLineNumber>;
+
+  /**
+   * Iterates over lines in this document which match the given pattern.
+   *
+   * @param pattern - only lines matching the given regular expression will be
+   *    returned in the iterator.
+   * @param start - an optional line number on which to start iterating.
+   */
   linesMatching: (pattern: RegExp, start?: number) => Iterable<MatchLineAndLineNumber>;
-  countLines(): number;
+
+  /**
+   * Creates a {@link Selection}, which can be used to select and delete or replace
+   * portions of the document.
+   */
   createSelection(): Selection;
+
+  /**
+   * The number of lines in this document.
+   */
+  lineCount: number;
+
+  /**
+   * Whether the document is dirty. The document is dirty if there have been
+   * modifications since it was created.
+   */
   isDirty: boolean;
+
+  /**
+   * The length of the document in characters.
+   */
   length: number;
 }
 
+/**
+ * Selection is a convenient way to identify portions of the text in a
+ * document and either delete or replace the text in those portions.
+ */
+export interface Selection {
+
+  /**
+   * Clears the current selection and starts a new selection beginning at
+   * `pos` and extending for `len` characters.
+   *
+   * @param pos - the starting position.
+   * @param len - the number of characters to include in the selection.
+   *
+   * @throws {@link OutOfBoundsError} if `pos` is beyond the end of the
+   *    document, or `pos + len` would make the selection extend beyond
+   *    the end of the document.
+   */
+  select: (pos: Position, len: number) => void;
+
+  /**
+   * Clears the current selection, and starts a new selection at the first
+   * match of the given regular expression or literal string.
+   *
+   * @return `true` if a match was found and selected. If `false` is
+   *    returned, no match was found, and the selection was not changed.
+   */
+  selectFirst: (pattern: RegExp | string) => boolean;
+
+  /**
+   * Expands the current selection to include the next match of the given
+   * regular expression or literal string. Everything between the end of
+   * the current selection and the end of the matched `pattern` will be
+   * included in the new selection.
+   *
+   * @return `true` if a match was found and selected. If `false` is returned,
+   *    no match was found, and the selection was not changed.
+   *
+   * @throws {@link NoSelectionError} if there is no current selection.
+   */
+  expandForward: (pattern: RegExp | string) => boolean;
+
+  /**
+   * Expands the current selection until the next match of the given
+   * regular expression or literal string is found. Everything between the
+   * end of the current selection up to the beginning of the matched `pattern`
+   * will be included in the new selection, but the match itself is *not*
+   * included.
+   *
+   * @return `true` if a match was found and selected. If `false` is returned,
+   *    no match was found, and the selection was not changed.
+   *
+   * @throws {@link NoSelectionError} if there is no current selection.
+   */
+  expandUntil: (pattern: RegExp | string) => boolean;
+
+  /**
+   * Expands the current selection to the end of the document.
+   *
+   * @throws {@link NoSelectionError} if there is no current selection.
+   */
+  expandToEnd: () => void;
+
+  /**
+   * Replaces the current selection with the given text.
+   *
+   * @param text - text to replace the current selection with.
+   */
+  replace: (text: string) => void;
+
+  /**
+   * Deletes the current selection.
+   */
+  delete: () => void;
+}
+
+/**
+ * Creates a new editor on the given string.
+ *
+ * @param text - text to edit.
+ * @returns an implementation of {@link TextEditor}.
+ */
 export function createEditor(text: string): TextEditor {
   return new PieceTextEditor(text);
 }
@@ -138,8 +326,8 @@ class PieceTextEditor implements TextEditor {
     return text;
   }
 
-  createSelection(): Selection {
-    return new Selection(this);
+  createSelection(): PieceSelection {
+    return new PieceSelection(this);
   }
 
   lines(start?: number): Iterable<LineAndLineNumber> {
@@ -150,7 +338,7 @@ class PieceTextEditor implements TextEditor {
     return iterable(() => new LineIteratorWithPattern(this, pattern, start));
   }
 
-  countLines() {
+  get lineCount() {
     var count = 0;
     for (var _ of this.lines()) {
       count++;
@@ -176,12 +364,12 @@ class PieceTextEditor implements TextEditor {
 
     this.write(() => {
       const start = this.locate(pos);
-      if (!start) throw new Error("Index out of bounds: pos=" + pos + " len=" + len)
+      if (!start) throw new OutOfBoundsError(pos, this.length, len);
 
       var [_, deleteStart] = this.split(start.node, start.offset);
 
       const end = this.locate(start.offset + len)
-      if (!end) throw new Error("Index out of bounds: pos=" + pos + " len=" + len)
+      if (!end) throw new OutOfBoundsError(pos, this.length, len);
       var [deleteEnd, _] = this.split(end.node, end.offset);
 
       this.table.removeNodeRange(deleteStart, deleteEnd);
@@ -221,7 +409,7 @@ class PieceTextEditor implements TextEditor {
       }
 
       if (!locator) {
-        throw new Error("Index out of bounds: " + pos)
+        throw new OutOfBoundsError(pos, this.length);
       }
 
       const offset = this.add.length;
@@ -402,7 +590,7 @@ class LineIterator implements Iterator<LineAndLineNumber> {
  * A selection is only valid while the document is not being modified. On mutation,
  * the selection becomes unusable.
  */
-class Selection {
+class PieceSelection {
   private editor: PieceTextEditor
   private text: string
   private version: number
@@ -431,7 +619,7 @@ class Selection {
     this.checkVersion();
     const offset = this.editor.toOffset(position);
     if (offset === undefined) {
-      throw new Error("Invalid position: " + JSON.stringify(position))
+      throw new OutOfBoundsError(position, this.editor.length)
     }
     this.offset = this.editor.toOffset(position);
     this.length = length;
@@ -498,7 +686,7 @@ class Selection {
     this.checkVersion();
 
     if (this.offset === undefined) {
-      throw new Error("No current selection")
+      throw new NoSelectionError()
     }
 
     const start = this.offset + this.length;
@@ -521,7 +709,7 @@ class Selection {
     this.checkVersion();
 
     if (this.offset === undefined) {
-      throw new Error("No current selection")
+      throw new NoSelectionError()
     }
 
     const start = this.offset + this.length;
@@ -543,7 +731,7 @@ class Selection {
     this.checkVersion();
 
     if (this.offset === undefined) {
-      throw new Error("No current selection")
+      throw new NoSelectionError()
     }
     const docLength = this.editor.length;
     const remaining = docLength - (this.offset + this.length)
