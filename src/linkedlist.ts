@@ -93,7 +93,7 @@ export class LinkedList<T> {
   removeNodeRange(start?: Node<T>, end?: Node<T>) {
     // TODO: this could be optimized to just attach the beginning to the end.
     let from = start ?? this.head;
-    let to = end ?? this.tail
+    const to = end ?? this.tail
 
     while (from) {
       const next = from.next;
@@ -127,7 +127,7 @@ export class LinkedList<T> {
   }
 
   toArray() {
-    let result = []
+    const result = []
     let n: Node<T> | undefined = this.head;
     while (n) {
       result.push(n.val);

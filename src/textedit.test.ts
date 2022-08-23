@@ -36,13 +36,13 @@ Potato
 Two Potatoes`
 
 test('Insert on last line', () => {
-  let editor = createEditor(text);
+  const editor = createEditor(text);
   editor.insert({ line: 3, column: 0 }, "Moar things")
   expect(editor.toString()).toMatch("Two Potatoes\nMoar things");
 })
 
 test('Insert on last line twice', () => {
-  let editor = createEditor(text);
+  const editor = createEditor(text);
   editor.insert({ line: 3, column: 0 }, "Moar things")
   editor.insert({ line: 4, column: 0 }, "Even Moar things")
   expect(editor.toString()).toMatch("Two Potatoes\nMoar things\nEven Moar things");
@@ -50,8 +50,8 @@ test('Insert on last line twice', () => {
 
 
 test('Simple selection', () => {
-  let editor = createEditor(text);
-  let selection = editor.createSelection();
+  const editor = createEditor(text);
+  const selection = editor.createSelection();
   selection.selectFirst("Potato")
   selection.replace("Tomato")
   expect(editor.toString()).toEqual("One\nTomato\nTwo Potatoes")
@@ -72,8 +72,8 @@ Hello there!
 `
 
 test('Selection expansion', () => {
-  let editor = createEditor(markdown);
-  let selection = editor.createSelection();
+  const editor = createEditor(markdown);
+  const selection = editor.createSelection();
   selection.selectFirst("# Hello");
   selection.expandForward("## World");
 
@@ -87,15 +87,15 @@ test('Selection expansion', () => {
 })
 
 test('Select on last line', () => {
-  let editor = createEditor("Hello\n")
-  let selection = editor.createSelection();
+  const editor = createEditor("Hello\n")
+  const selection = editor.createSelection();
   // We shouldn't get an invalid position error from this.
   selection.select({ line: 1, column: 0 }, 0);
 })
 
 test('Selection expand until', () => {
-  let editor = createEditor(markdown);
-  let selection = editor.createSelection();
+  const editor = createEditor(markdown);
+  const selection = editor.createSelection();
   selection.selectFirst("## World");
   selection.expandUntil("## Another")
   selection.replace("## Place\n")

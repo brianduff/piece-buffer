@@ -241,7 +241,7 @@ class PieceTextEditor implements TextEditor {
   file: string;
   add = "";
   table: LinkedList<Piece>
-  version: number = 0;
+  version = 0;
   private _length: number;
   private _snapshot: undefined | string;
 
@@ -285,8 +285,8 @@ class PieceTextEditor implements TextEditor {
   private split(node: PieceNode, offset: number) {
     const beforeLength = offset;
     const afterLength = node.val.length - offset;
-    var beforeSplit: PieceNode | undefined = node;
-    var afterSplit = undefined;
+    let beforeSplit: PieceNode | undefined = node;
+    let afterSplit = undefined;
 
     if (afterLength > 0) {
       afterSplit = this.table.insertAfter(node, {
@@ -339,8 +339,9 @@ class PieceTextEditor implements TextEditor {
   }
 
   get lineCount() {
-    var count = 0;
-    for (var _ of this.lines()) {
+    let count = 0;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    for (const _ of this.lines()) {
       count++;
     }
     return count;
@@ -366,11 +367,12 @@ class PieceTextEditor implements TextEditor {
       const start = this.locate(pos);
       if (!start) throw new OutOfBoundsError(pos, this.length, len);
 
-      var [_, deleteStart] = this.split(start.node, start.offset);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const [_unused, deleteStart] = this.split(start.node, start.offset);
 
       const end = this.locate(start.offset + len)
       if (!end) throw new OutOfBoundsError(pos, this.length, len);
-      var [deleteEnd, _] = this.split(end.node, end.offset);
+      const [deleteEnd, _] = this.split(end.node, end.offset);
 
       this.table.removeNodeRange(deleteStart, deleteEnd);
       return -len;
@@ -379,7 +381,7 @@ class PieceTextEditor implements TextEditor {
 
   append(text: string) {
     return this.write(() => {
-      var offset = this.add.length;
+      const offset = this.add.length;
       this.add += text
 
       this.table.insertAfter(this.table.getTail(), {
@@ -402,7 +404,7 @@ class PieceTextEditor implements TextEditor {
       // Handle the special case of inserting on the last line and inserting
       // a newline automatically.
       if (!locator && 'object' === typeof pos && 'column' in pos) {
-        let lineAndColumn = pos as LineAndColumn;
+        const lineAndColumn = pos as LineAndColumn;
         if (lineAndColumn.column === 0) {
           return this.append("\n" + text);
         }
@@ -434,13 +436,13 @@ class PieceTextEditor implements TextEditor {
    * this offset, and the offset within that piece.
    */
   private locate(pos: Position) {
-    let offset = this.toOffset(pos);
+    const offset = this.toOffset(pos);
 
     if (offset) {
-      var p = this.table.getHead();
-      var docOffset = 0;
+      let p = this.table.getHead();
+      let docOffset = 0;
       while (p !== undefined) {
-        var endOffset = docOffset + p.val.length;
+        const endOffset = docOffset + p.val.length;
         if (offset >= docOffset && offset <= endOffset) {
           return {
             node: p,
@@ -472,8 +474,8 @@ class PieceTextEditor implements TextEditor {
     let charOffset = 0;
     let node = this.table.getHead();
     while (node) {
-      let text = this.getText(node);
-      for (var i = 0; i < text.length; i++) {
+      const text = this.getText(node);
+      for (let i = 0; i < text.length; i++) {
         if (loc.line === line && loc.column === col) {
           return charOffset;
         }
@@ -504,7 +506,7 @@ class LineIteratorWithPattern implements Iterator<MatchLineAndLineNumber> {
   }
 
   next(): IteratorResult<MatchLineAndLineNumber> {
-    var baseResult = this.baseIterator.next();
+    let baseResult = this.baseIterator.next();
 
     while (!baseResult.done) {
       const [line, number] = baseResult.value;
@@ -548,8 +550,8 @@ class LineIterator implements Iterator<LineAndLineNumber> {
       this.nextLine = undefined;
       return;
     }
-    var startOfCurrentLine = this.charPos;
-    var endOfCurrentLine;
+    const startOfCurrentLine = this.charPos;
+    let endOfCurrentLine;
     for (; this.charPos < this.textSnapshot.length; this.charPos++) {
       if (this.textSnapshot.charAt(this.charPos) === '\n') {
         endOfCurrentLine = this.charPos;
@@ -597,7 +599,7 @@ class PieceSelection {
 
   // TODO: we could model discontiguous selections. Is that useful?
   private offset?: number
-  private length: number = 0
+  private length = 0
 
   constructor(editor: PieceTextEditor) {
     this.editor = editor;
@@ -631,14 +633,13 @@ class PieceSelection {
   expand(position: Position) {
     this.checkVersion();
 
-    var newOffset = this.editor.toOffset(position);
+    const newOffset = this.editor.toOffset(position);
     if (newOffset && this.offset && newOffset < this.offset) {
-      var diff = this.offset - newOffset;
+      const diff = this.offset - newOffset;
       this.offset = newOffset;
       this.length += diff;
     } else if (newOffset && this.offset && newOffset > this.offset + this.length) {
-      var diff = newOffset - (this.offset + this.length);
-      this.length += diff;
+      this.length += newOffset - (this.offset + this.length);
     }
   }
 
