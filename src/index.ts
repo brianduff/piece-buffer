@@ -372,6 +372,7 @@ class PieceTextEditor implements TextEditor {
 
       const end = this.locate(start.offset + len)
       if (!end) throw new OutOfBoundsError(pos, this.length, len);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [deleteEnd, _] = this.split(end.node, end.offset);
 
       this.table.removeNodeRange(deleteStart, deleteEnd);
@@ -420,6 +421,7 @@ class PieceTextEditor implements TextEditor {
       const prefixNode = locator.node;
       prefixNode.val.length = locator.offset;
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [beforeNode, _] = this.split(locator.node, locator.offset);
 
       this.table.insertAfter(beforeNode, {
@@ -741,7 +743,7 @@ class PieceSelection {
   }
 }
 
-function repeat(n: number, f: any) {
+function repeat(n: number, f: () => void) {
   while (n-- > 0) f();
 }
 
