@@ -9,7 +9,8 @@
     "prepublish": "npm run compile",
     "compile": "npx tsc",
     "compile-dev": "npx swc src --only src/**/*.ts -d dist",
-    "test": "npm run compile-dev && npx jest"
+    "test": "npm run lint && npm run compile-dev && npx jest",
+    "lint": "npx eslint"
   },
   "repository": {
     "type": "git",
