@@ -1,12 +1,12 @@
 {
   "name": "piece-buffer",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "A lightweight implementation of a Piece Buffer - an efficient data structure for storing and modifying text.",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "prepublish": "npm run compile",
+    "prepare": "npm run compile",
     "compile": "npx tsc",
     "compile-dev": "npx swc src --only src/**/*.ts -d dist",
     "test": "npm run lint && npm run compile-dev && npx jest",
@@ -36,7 +36,9 @@
     "README.md",
     "package.json",
     "docs/**/*",
-    "dist/**/*",
-    "!dist/**/*.test.*"
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/internal/linkedlist.js",
+    "dist/internal/linkedlist.d.ts"
   ]
 }
