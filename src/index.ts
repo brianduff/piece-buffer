@@ -23,11 +23,15 @@ type PieceNode = Node<Piece>;
 
 /**
  * A character offset.
+ *
+ * @public
  */
 export type Offset = number;
 
 /**
  * A position in the document by line and column number.
+ *
+ * @public
  */
 export interface LineAndColumn {
   /**
@@ -43,21 +47,29 @@ export interface LineAndColumn {
 /**
  * A position within the document. This can be a character offset, or a line
  * and column position.
+ *
+ * @public
  */
 export type Position = Offset | LineAndColumn;
 
 /**
  * Returned by the iterator in {@link TextEditor.lines}
+ *
+ * @public
  */
 export type LineAndLineNumber = [string, number];
 
 /**
  * Returned by the iterator in {@link TextEditor.linesMatching}.
+ *
+ * @public
  */
 export type MatchLineAndLineNumber = [RegExpMatchArray, string, number];
 
 /**
  * Error thrown when a requested index is out of bounds.
+ *
+ * @public
  */
 export class OutOfBoundsError extends Error {
   constructor(pos: Position, currentLength: number, requestedLength?: number) {
@@ -67,6 +79,8 @@ export class OutOfBoundsError extends Error {
 
 /**
  * Error thrown when there is no current selection in a {@link Selection}.
+ *
+ * @public
  */
 export class NoSelectionError extends Error {
   constructor() {
@@ -76,6 +90,8 @@ export class NoSelectionError extends Error {
 
 /**
  * Editing primitives for a block of text.
+ *
+ * @public
  */
 export interface TextEditor {
   /**
@@ -155,6 +171,8 @@ export interface TextEditor {
 /**
  * Selection is a convenient way to identify portions of the text in a
  * document and either delete or replace the text in those portions.
+ *
+ * @public
  */
 export interface Selection {
 
@@ -175,7 +193,7 @@ export interface Selection {
    * Clears the current selection, and starts a new selection at the first
    * match of the given regular expression or literal string.
    *
-   * @return `true` if a match was found and selected. If `false` is
+   * @returns `true` if a match was found and selected. If `false` is
    *    returned, no match was found, and the selection was not changed.
    */
   selectFirst: (pattern: RegExp | string) => boolean;
@@ -186,7 +204,7 @@ export interface Selection {
    * the current selection and the end of the matched `pattern` will be
    * included in the new selection.
    *
-   * @return `true` if a match was found and selected. If `false` is returned,
+   * @returns `true` if a match was found and selected. If `false` is returned,
    *    no match was found, and the selection was not changed.
    *
    * @throws {@link NoSelectionError} if there is no current selection.
@@ -200,7 +218,7 @@ export interface Selection {
    * will be included in the new selection, but the match itself is *not*
    * included.
    *
-   * @return `true` if a match was found and selected. If `false` is returned,
+   * @returns `true` if a match was found and selected. If `false` is returned,
    *    no match was found, and the selection was not changed.
    *
    * @throws {@link NoSelectionError} if there is no current selection.
@@ -232,6 +250,7 @@ export interface Selection {
  *
  * @param text - text to edit.
  * @returns an implementation of {@link TextEditor}.
+ * @public
  */
 export function createEditor(text: string): TextEditor {
   return new PieceTextEditor(text);
