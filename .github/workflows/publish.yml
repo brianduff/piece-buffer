@@ -11,9 +11,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-          registry-url: 'https://wombat-dressing-room.appspot.com/'
       - run: npm ci
       - run: npm test
-      - run: npm publish
+      - run: npm publish --registry https://wombat-dressing-room.appspot.com/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
