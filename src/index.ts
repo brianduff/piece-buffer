@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { LinkedList, Node } from "./linkedlist";
+import { LinkedList, Node } from "./internal/linkedlist";
 
 interface Piece {
   buffer: "original" | "add",
