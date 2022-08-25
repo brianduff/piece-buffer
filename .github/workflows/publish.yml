@@ -13,6 +13,10 @@ jobs:
           node-version: '16.x'
       - run: npm ci
       - run: npm test
-      - run: npm config set always-auth true && npm config set _auth $NODE_AUTH_TOKEN && npm publish --registry https://wombat-dressing-room.appspot.com/
+      - run: echo "//wombat-dressing-room.appspot.com/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+      - run: echo "registry=https://wombat-dressing-room.appspot.com/" >> .npmrc
+      - run: echo "always-auth=true" >> .npmrc
+      - run: cat .npmrc
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
