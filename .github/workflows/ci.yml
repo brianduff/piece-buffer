@@ -33,7 +33,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Release
-        uses: justincy/github-action-npm-release@2.0.2
+        uses: brianduff/github-action-npm-release@2.0.2
+        with:
+          tag_prefix: v
         id: release
       - name: Print release output
         if: ${{ steps.release.outputs.released == 'true' }}
