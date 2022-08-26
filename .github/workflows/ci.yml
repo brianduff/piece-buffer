@@ -50,6 +50,7 @@ jobs:
             node-version: '16.x'
         # Need to compile *before* setting the npm registry to wombat, otherwise
         # npm will try to use the publish service for installing, which is verbotten.
+        - run: npm ci
         - run: npm run compile
         - run: echo "//wombat-dressing-room.appspot.com/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
           env:
