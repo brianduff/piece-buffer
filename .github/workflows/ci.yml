@@ -45,7 +45,6 @@ jobs:
           with:
             node-version: '16.x'
             registry-url: 'https://wombat-dressing-room.appspot.com/'
-        - run: cat .npmrc
         - run: npm publish
           env:
             NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
