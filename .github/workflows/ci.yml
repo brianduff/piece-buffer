@@ -35,3 +35,17 @@ jobs:
       - name: Print release output
         if: ${{ steps.release.outputs.released == 'true' }}
         run: echo Release ID ${{ steps.release.outputs.release_id }}
+  publish:
+      runs-on: ubuntu-latest
+      needs: release
+      steps:
+        - uses: actions/checkout@v3
+        # Setup .npmrc file to publish to npm
+        - uses: actions/setup-node@v3
+          with:
+            node-version: '16.x'
+            registry-url: 'https://wombat-dressing-room.appspot.com/'
+        - run: cat .npmrc
+        - run: npm publish
+          env:
+            NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
