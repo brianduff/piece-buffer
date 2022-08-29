@@ -24,9 +24,9 @@ Here's a small example that creates an editor, inserts some text in the middle, 
 
 ```js
 const pb = require("piece-buffer");
-const editor = pb.createEditor("Hello World");
+const editor = pb.createEditor("Hello World.");
 editor.insert(6, "Cool ");
-editor.append(". Goodbye!");
+editor.append(" Goodbye!");
 // Prints "Hello Cool World. Goodbye!"
 console.log(editor.toString());
 ```

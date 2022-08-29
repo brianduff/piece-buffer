@@ -452,9 +452,6 @@ class PieceTextEditor implements TextEditor {
       const offset = this.add.length;
       this.add = this.add + text;
 
-      const prefixNode = locator.node;
-      prefixNode.val.length = locator.offset;
-
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [beforeNode, _] = this.split(locator.node, locator.offset);
 

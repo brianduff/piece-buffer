@@ -109,8 +109,8 @@ test("Selection expand until", () => {
 });
 
 test("Sample works", () => {
-  const editor = createEditor("Hello World");
+  const editor = createEditor("Hello World.");
   editor.insert(6, "Cool ");
-  editor.append("Goodbye!");
+  editor.append(" Goodbye!");
   expect(editor.toString()).toEqual("Hello Cool World. Goodbye!");
 });
