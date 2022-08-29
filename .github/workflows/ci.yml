@@ -59,5 +59,4 @@ jobs:
             NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
         - run: npm config set registry=https://wombat-dressing-room.appspot.com/
         - run: npm config set always-auth=true
-        - run: cat .npmrc
         - run: npm publish
