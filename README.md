@@ -45,9 +45,12 @@ selection.replace("Piece Buffer");
 console.log(editor.toString());
 ```
 
+TODO: more documentation
+
 ## Performance
 
 TODO: Compare performance to basic strings, write up benchmark.
+
 
 ---
 This is not an officially supported Google product.
