@@ -1,6 +1,6 @@
 # Piece Buffer
 
-[![npm version](https://badge.fury.io/js/piece-buffer.svg)](https://badge.fury.io/js/piece-buffer) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/brianduff/piece-buffer/piece-buffer)
+[![npm version](https://badge.fury.io/js/piece-buffer.svg)](https://badge.fury.io/js/piece-buffer) [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/brianduff/piece-buffer/piece-buffer)](https://github.com/brianduff/piece-buffer/actions)
 
 This is a lightweight implementation of a Piece Buffer - an efficient data structure for storing and modifying text.
 
