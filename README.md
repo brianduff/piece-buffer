@@ -47,7 +47,7 @@ console.log(editor.toString());
 
 ## Performance
 
-TODO: Compare performance to basic strings.
+TODO: Compare performance to basic strings, write up benchmark.
 
 ---
 This is not an officially supported Google product.
