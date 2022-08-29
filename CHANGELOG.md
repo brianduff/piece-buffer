@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.12](https://github.com/brianduff/piece-buffer/compare/v0.1.11...v0.1.12) (2022-08-29)
+
+
+### Bug Fixes
+
+* add sample and docs for selections ([1e661f0](https://github.com/brianduff/piece-buffer/commit/1e661f045fb37882c05d128ef6387144f1c2e290))
+* update test script for examples ([2f08026](https://github.com/brianduff/piece-buffer/commit/2f080260479934b97b85b0fc82ae820af02cc219))
+
 ## [0.1.11](https://github.com/brianduff/piece-buffer/compare/v0.1.10...v0.1.11) (2022-08-29)
 
 
