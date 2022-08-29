@@ -114,3 +114,11 @@ test("Sample works", () => {
   editor.append(" Goodbye!");
   expect(editor.toString()).toEqual("Hello Cool World. Goodbye!");
 });
+
+test("Selection sample works", () => {
+  const editor = createEditor("Hello World.");
+  const selection = editor.createSelection();
+  selection.selectFirst("World");
+  selection.replace("Piece Buffer");
+  expect(editor.toString()).toEqual("Hello Piece Buffer.");
+});
