@@ -18,7 +18,6 @@ interface Piece {
   buffer: "original" | "add",
   offset: number,
   length: number
-  bogus?: number
 }
 type PieceNode = Node<Piece>;
 
