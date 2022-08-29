@@ -54,10 +54,10 @@ jobs:
         # npm will try to use the publish service for installing, which is verbotten.
         - run: npm ci
         - run: npm run compile
-        - run: echo "//wombat-dressing-room.appspot.com/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+        - run: npm config set "//wombat-dressing-room.appspot.com/:_authToken"=${NODE_AUTH_TOKEN}
           env:
             NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-        - run: echo "registry=https://wombat-dressing-room.appspot.com/" >> .npmrc
-        - run: echo "always-auth=true" >> .npmrc
+        - run: npm config set registry=https://wombat-dressing-room.appspot.com/"
+        - run: npm config set always-auth=true
         - run: cat .npmrc
         - run: npm publish
