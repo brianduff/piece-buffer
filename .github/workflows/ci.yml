@@ -60,3 +60,5 @@ jobs:
             registry-url: 'https://wombat-dressing-room.appspot.com/'
             always-auth: true
         - run: npm publish
+          env:
+            NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
