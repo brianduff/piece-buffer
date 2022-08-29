@@ -58,4 +58,5 @@ jobs:
           with:
             node-version: '16.x'
             registry-url: 'https://wombat-dressing-room.appspot.com/'
+            always-auth: true
         - run: npm publish
