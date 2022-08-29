@@ -29,8 +29,8 @@ export class Node<T> {
  * @internal
  */
 export class LinkedList<T> {
-  private head: Node<T> | undefined
-  private tail: Node<T> | undefined
+  private head: Node<T> | undefined;
+  private tail: Node<T> | undefined;
 
   constructor(headValue?: T) {
     const head = headValue ? new Node(headValue) : undefined;
@@ -47,7 +47,7 @@ export class LinkedList<T> {
   }
 
   private createNode(value: T) {
-    return new Node(value)
+    return new Node(value);
   }
 
   private insertNodeBefore(pos: Node<T>, node: Node<T>) {
@@ -108,7 +108,7 @@ export class LinkedList<T> {
     // TODO: this should be optimized to just attach the beginning to the end.
     // TODO: we should also actually check that they're contiguous
     let from = start ?? this.head;
-    const to = end ?? this.tail
+    const to = end ?? this.tail;
 
     while (from) {
       const next = from.next;
@@ -130,7 +130,7 @@ export class LinkedList<T> {
   }
 
   push(value: T) {
-    this.pushNode(new Node(value))
+    this.pushNode(new Node(value));
   }
 
   getHead() {
@@ -142,7 +142,7 @@ export class LinkedList<T> {
   }
 
   toArray() {
-    const result = []
+    const result = [];
     let n: Node<T> | undefined = this.head;
     while (n) {
       result.push(n.val);
@@ -151,4 +151,3 @@ export class LinkedList<T> {
     return result;
   }
 }
-

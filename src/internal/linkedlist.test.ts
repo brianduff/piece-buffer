@@ -14,7 +14,7 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { LinkedList } from "./linkedlist"
+import { LinkedList } from "./linkedlist";
 
 test("Push and get elements back", () => {
   const list = new LinkedList(5);
@@ -22,55 +22,55 @@ test("Push and get elements back", () => {
   list.push(7);
   list.push(8);
 
-  expect(list.toArray()).toEqual([5, 6, 7, 8])
-})
+  expect(list.toArray()).toEqual([5, 6, 7, 8]);
+});
 
 test("Insert after", () => {
   const list = LinkedList.fromArray([1, 2, 3, 4, 5]);
-  list.insertAfter(list.getHead()?.next, 99)
-  expect(list.toArray()).toEqual([1, 2, 99, 3, 4, 5])
-})
+  list.insertAfter(list.getHead()?.next, 99);
+  expect(list.toArray()).toEqual([1, 2, 99, 3, 4, 5]);
+});
 
 test("Insert after with undefined", () => {
   const list = LinkedList.fromArray([1, 2, 3, 4, 5]);
-  list.insertAfter(undefined, 55)
-  expect(list.toArray()).toEqual([55, 1, 2, 3, 4, 5])
-})
+  list.insertAfter(undefined, 55);
+  expect(list.toArray()).toEqual([55, 1, 2, 3, 4, 5]);
+});
 
 test("Insert after with undefined in empty list", () => {
   const list = new LinkedList<number>();
-  list.insertAfter(undefined, 55)
-  expect(list.toArray()).toEqual([55])
-})
+  list.insertAfter(undefined, 55);
+  expect(list.toArray()).toEqual([55]);
+});
 
 test("Insert after tail", () => {
   const list = LinkedList.fromArray([1, 2, 3]);
   list.insertAfter(list.getTail(), 100);
-  expect(list.toArray()).toEqual([1, 2, 3, 100])
-})
+  expect(list.toArray()).toEqual([1, 2, 3, 100]);
+});
 
 test("Remove head", () => {
-  const list = LinkedList.fromArray([1, 2, 3])
-  list.removeNode(list.getHead()!)
-  expect(list.toArray()).toEqual([2, 3])
-})
+  const list = LinkedList.fromArray([1, 2, 3]);
+  list.removeNode(list.getHead()!);
+  expect(list.toArray()).toEqual([2, 3]);
+});
 
 test("Remove tail", () => {
-  const list = LinkedList.fromArray([1, 2, 3])
+  const list = LinkedList.fromArray([1, 2, 3]);
   list.removeNode(list.getTail()!);
-  expect(list.toArray()).toEqual([1, 2])
-})
+  expect(list.toArray()).toEqual([1, 2]);
+});
 
 test("Remove middle", () => {
-  const list = LinkedList.fromArray([5, 6, 7])
+  const list = LinkedList.fromArray([5, 6, 7]);
   list.removeNode(list.getHead()?.next!);
-  expect(list.toArray()).toEqual([5, 7])
-})
+  expect(list.toArray()).toEqual([5, 7]);
+});
 
 test("Remove node range", () => {
-  const list = LinkedList.fromArray([5, 6, 7, 8, 9, 10, 11, 12])
+  const list = LinkedList.fromArray([5, 6, 7, 8, 9, 10, 11, 12]);
 
   list.removeNodeRange(list.getHead()?.next, list.getTail()?.prev);
 
-  expect(list.toArray()).toEqual([5, 12])
-})
+  expect(list.toArray()).toEqual([5, 12]);
+});

@@ -12,53 +12,52 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 // This is a test.
 
 import { createEditor } from ".";
 
-test('Create editor returns original string', () => {
+test("Create editor returns original string", () => {
   const editor = createEditor("Hello World!");
   expect(editor.toString()).toBe("Hello World!");
-})
+});
 
-
-test('Count lines', () => {
+test("Count lines", () => {
   const text = `One
   Two
   Three
   Four
-  Five`
+  Five`;
 
   const editor = createEditor(text);
-  expect(editor.lineCount).toBe(5)
-})
+  expect(editor.lineCount).toBe(5);
+});
 
 const text = `One
 Potato
-Two Potatoes`
+Two Potatoes`;
 
-test('Insert on last line', () => {
+test("Insert on last line", () => {
   const editor = createEditor(text);
-  editor.insert({ line: 3, column: 0 }, "Moar things")
+  editor.insert({ line: 3, column: 0 }, "Moar things");
   expect(editor.toString()).toMatch("Two Potatoes\nMoar things");
-})
+});
 
-test('Insert on last line twice', () => {
+test("Insert on last line twice", () => {
   const editor = createEditor(text);
-  editor.insert({ line: 3, column: 0 }, "Moar things")
-  editor.insert({ line: 4, column: 0 }, "Even Moar things")
-  expect(editor.toString()).toMatch("Two Potatoes\nMoar things\nEven Moar things");
-})
+  editor.insert({ line: 3, column: 0 }, "Moar things");
+  editor.insert({ line: 4, column: 0 }, "Even Moar things");
+  expect(editor.toString()).toMatch(
+    "Two Potatoes\nMoar things\nEven Moar things"
+  );
+});
 
-
-test('Simple selection', () => {
+test("Simple selection", () => {
   const editor = createEditor(text);
   const selection = editor.createSelection();
-  selection.selectFirst("Potato")
-  selection.replace("Tomato")
-  expect(editor.toString()).toEqual("One\nTomato\nTwo Potatoes")
-})
+  selection.selectFirst("Potato");
+  selection.replace("Tomato");
+  expect(editor.toString()).toEqual("One\nTomato\nTwo Potatoes");
+});
 
 const markdown = `
 # Hello
@@ -72,9 +71,9 @@ const markdown = `
 ## Another
 
 Hello there!
-`
+`;
 
-test('Selection expansion', () => {
+test("Selection expansion", () => {
   const editor = createEditor(markdown);
   const selection = editor.createSelection();
   selection.selectFirst("# Hello");
@@ -85,22 +84,26 @@ test('Selection expansion', () => {
     found = selection.expandForward(/- .+/);
   }
 
-  selection.replace("Turnip!")
-  expect(editor.toString()).toEqual("\nTurnip!\n\n## Another\n\nHello there!\n")
-})
+  selection.replace("Turnip!");
+  expect(editor.toString()).toEqual(
+    "\nTurnip!\n\n## Another\n\nHello there!\n"
+  );
+});
 
-test('Select on last line', () => {
-  const editor = createEditor("Hello\n")
+test("Select on last line", () => {
+  const editor = createEditor("Hello\n");
   const selection = editor.createSelection();
   // We shouldn't get an invalid position error from this.
   selection.select({ line: 1, column: 0 }, 0);
-})
+});
 
-test('Selection expand until', () => {
+test("Selection expand until", () => {
   const editor = createEditor(markdown);
   const selection = editor.createSelection();
   selection.selectFirst("## World");
-  selection.expandUntil("## Another")
-  selection.replace("## Place\n")
-  expect(editor.toString()).toEqual("\n# Hello\n\n## Place\n## Another\n\nHello there!\n")
-})
+  selection.expandUntil("## Another");
+  selection.replace("## Place\n");
+  expect(editor.toString()).toEqual(
+    "\n# Hello\n\n## Place\n## Another\n\nHello there!\n"
+  );
+});

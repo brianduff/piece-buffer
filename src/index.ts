@@ -15,9 +15,9 @@
 import { LinkedList, Node } from "./internal/linkedlist";
 
 interface Piece {
-  buffer: "original" | "add",
-  offset: number,
-  length: number
+  buffer: "original" | "add";
+  offset: number;
+  length: number;
 }
 type PieceNode = Node<Piece>;
 
@@ -73,7 +73,11 @@ export type MatchLineAndLineNumber = [RegExpMatchArray, string, number];
  */
 export class OutOfBoundsError extends Error {
   constructor(pos: Position, currentLength: number, requestedLength?: number) {
-    super(`Position out of bounds: ${JSON.stringify(pos)} ${requestedLength ? "(len=" + requestedLength + ")" : ""}. Current length=${currentLength}`)
+    super(
+      `Position out of bounds: ${JSON.stringify(pos)} ${
+        requestedLength ? "(len=" + requestedLength + ")" : ""
+      }. Current length=${currentLength}`
+    );
   }
 }
 
@@ -84,7 +88,7 @@ export class OutOfBoundsError extends Error {
  */
 export class NoSelectionError extends Error {
   constructor() {
-    super("No current selection")
+    super("No current selection");
   }
 }
 
@@ -134,7 +138,10 @@ export interface TextEditor {
    * @param pattern - an optional regular expression or string. Only matching
    *    lines will be returned by the iterator.
    */
-  lines: (start?: number, pattern?: RegExp | string) => Iterable<LineAndLineNumber>;
+  lines: (
+    start?: number,
+    pattern?: RegExp | string
+  ) => Iterable<LineAndLineNumber>;
 
   /**
    * Iterates over lines in this document which match the given pattern.
@@ -143,7 +150,10 @@ export interface TextEditor {
    *    returned in the iterator.
    * @param start - an optional line number on which to start iterating.
    */
-  linesMatching: (pattern: RegExp, start?: number) => Iterable<MatchLineAndLineNumber>;
+  linesMatching: (
+    pattern: RegExp,
+    start?: number
+  ) => Iterable<MatchLineAndLineNumber>;
 
   /**
    * Creates a {@link Selection}, which can be used to select and delete or replace
@@ -175,7 +185,6 @@ export interface TextEditor {
  * @public
  */
 export interface Selection {
-
   /**
    * Clears the current selection and starts a new selection beginning at
    * `pos` and extending for `len` characters.
@@ -259,7 +268,7 @@ export function createEditor(text: string): TextEditor {
 class PieceTextEditor implements TextEditor {
   file: string;
   add = "";
-  table: LinkedList<Piece>
+  table: LinkedList<Piece>;
   version = 0;
   private _length: number;
   private _snapshot: undefined | string;
@@ -269,13 +278,13 @@ class PieceTextEditor implements TextEditor {
     this.table = new LinkedList({
       buffer: "original",
       offset: 0,
-      length: text.length
-    })
+      length: text.length,
+    });
     this._length = text.length;
   }
 
   get isDirty() {
-    return this.toString() !== this.file
+    return this.toString() !== this.file;
   }
 
   get length() {
@@ -311,8 +320,8 @@ class PieceTextEditor implements TextEditor {
       afterSplit = this.table.insertAfter(node, {
         buffer: node.val.buffer,
         offset: node.val.offset + offset,
-        length: afterLength
-      })
+        length: afterLength,
+      });
     }
 
     if (beforeLength === 0) {
@@ -322,7 +331,7 @@ class PieceTextEditor implements TextEditor {
       node.val.length = offset;
     }
 
-    return [beforeSplit, afterSplit]
+    return [beforeSplit, afterSplit];
   }
 
   private getBuffer(piece: Piece) {
@@ -334,7 +343,7 @@ class PieceTextEditor implements TextEditor {
       return this._snapshot;
     }
     let text = "";
-    let node = this.table.getHead()
+    let node = this.table.getHead();
     while (node !== undefined) {
       text += this.getText(node);
       node = node.next;
@@ -350,10 +359,13 @@ class PieceTextEditor implements TextEditor {
   }
 
   lines(start?: number): Iterable<LineAndLineNumber> {
-    return iterable(() => new LineIterator(this, start))
+    return iterable(() => new LineIterator(this, start));
   }
 
-  linesMatching(pattern: RegExp, start?: number): Iterable<MatchLineAndLineNumber> {
+  linesMatching(
+    pattern: RegExp,
+    start?: number
+  ): Iterable<MatchLineAndLineNumber> {
     return iterable(() => new LineIteratorWithPattern(this, pattern, start));
   }
 
@@ -368,9 +380,12 @@ class PieceTextEditor implements TextEditor {
 
   private getText(node?: Node<Piece>) {
     if (node) {
-      return this.getBuffer(node.val).substring(node.val.offset, node.val.offset + node.val.length);
+      return this.getBuffer(node.val).substring(
+        node.val.offset,
+        node.val.offset + node.val.length
+      );
     }
-    return ""
+    return "";
   }
 
   private clearSnapshot() {
@@ -389,7 +404,7 @@ class PieceTextEditor implements TextEditor {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [_unused, deleteStart] = this.split(start.node, start.offset);
 
-      const end = this.locate(start.offset + len)
+      const end = this.locate(start.offset + len);
       if (!end) throw new OutOfBoundsError(pos, this.length, len);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [deleteEnd, _] = this.split(end.node, end.offset);
@@ -402,15 +417,15 @@ class PieceTextEditor implements TextEditor {
   append(text: string) {
     return this.write(() => {
       const offset = this.add.length;
-      this.add += text
+      this.add += text;
 
       this.table.insertAfter(this.table.getTail(), {
         buffer: "add",
         offset,
-        length: text.length
-      })
+        length: text.length,
+      });
       return text.length;
-    })
+    });
   }
 
   insert(pos: Position, text: string) {
@@ -423,7 +438,7 @@ class PieceTextEditor implements TextEditor {
 
       // Handle the special case of inserting on the last line and inserting
       // a newline automatically.
-      if (!locator && 'object' === typeof pos && 'column' in pos) {
+      if (!locator && "object" === typeof pos && "column" in pos) {
         const lineAndColumn = pos as LineAndColumn;
         if (lineAndColumn.column === 0) {
           return this.append("\n" + text);
@@ -435,7 +450,7 @@ class PieceTextEditor implements TextEditor {
       }
 
       const offset = this.add.length;
-      this.add = this.add + text
+      this.add = this.add + text;
 
       const prefixNode = locator.node;
       prefixNode.val.length = locator.offset;
@@ -446,10 +461,10 @@ class PieceTextEditor implements TextEditor {
       this.table.insertAfter(beforeNode, {
         buffer: "add",
         offset,
-        length: text.length
+        length: text.length,
       });
       return text.length;
-    })
+    });
   }
 
   /**
@@ -467,8 +482,8 @@ class PieceTextEditor implements TextEditor {
         if (offset >= docOffset && offset <= endOffset) {
           return {
             node: p,
-            offset: offset - docOffset
-          }
+            offset: offset - docOffset,
+          };
         }
         docOffset = endOffset;
         p = p.next;
@@ -500,7 +515,7 @@ class PieceTextEditor implements TextEditor {
         if (loc.line === line && loc.column === col) {
           return charOffset;
         }
-        if (text.charAt(i) === '\n') {
+        if (text.charAt(i) === "\n") {
           line++;
           col = 0;
         } else {
@@ -511,7 +526,7 @@ class PieceTextEditor implements TextEditor {
       node = node.next;
     }
 
-    if (line == loc.line && col === loc.column) {
+    if (line === loc.line && col === loc.column) {
       return charOffset;
     }
   }
@@ -521,7 +536,7 @@ class LineIteratorWithPattern implements Iterator<MatchLineAndLineNumber> {
   private baseIterator: LineIterator;
   private pattern: RegExp;
 
-  constructor(editor: PieceTextEditor, pattern: RegExp, start?: number,) {
+  constructor(editor: PieceTextEditor, pattern: RegExp, start?: number) {
     this.baseIterator = new LineIterator(editor, start);
     this.pattern = pattern;
   }
@@ -535,16 +550,16 @@ class LineIteratorWithPattern implements Iterator<MatchLineAndLineNumber> {
       if (match) {
         return {
           done: false,
-          value: [match, line, number]
-        }
+          value: [match, line, number],
+        };
       }
       baseResult = this.baseIterator.next();
     }
 
     return {
       done: true,
-      value: null
-    }
+      value: null,
+    };
   }
 }
 
@@ -574,7 +589,7 @@ class LineIterator implements Iterator<LineAndLineNumber> {
     const startOfCurrentLine = this.charPos;
     let endOfCurrentLine;
     for (; this.charPos < this.textSnapshot.length; this.charPos++) {
-      if (this.textSnapshot.charAt(this.charPos) === '\n') {
+      if (this.textSnapshot.charAt(this.charPos) === "\n") {
         endOfCurrentLine = this.charPos;
         // Skip past the newline
         this.charPos++;
@@ -586,7 +601,10 @@ class LineIterator implements Iterator<LineAndLineNumber> {
       this.eof = true;
     }
 
-    this.nextLine = [this.textSnapshot.substring(startOfCurrentLine, endOfCurrentLine), this.line];
+    this.nextLine = [
+      this.textSnapshot.substring(startOfCurrentLine, endOfCurrentLine),
+      this.line,
+    ];
     this.line++;
   }
 
@@ -599,8 +617,8 @@ class LineIterator implements Iterator<LineAndLineNumber> {
 
     return {
       value: this.nextLine as LineAndLineNumber,
-      done: this.nextLine === undefined
-    }
+      done: this.nextLine === undefined,
+    };
   }
 }
 
@@ -614,13 +632,13 @@ class LineIterator implements Iterator<LineAndLineNumber> {
  * the selection becomes unusable.
  */
 class PieceSelection {
-  private editor: PieceTextEditor
-  private text: string
-  private version: number
+  private editor: PieceTextEditor;
+  private text: string;
+  private version: number;
 
   // TODO: we could model discontiguous selections. Is that useful?
-  private offset?: number
-  private length = 0
+  private offset?: number;
+  private length = 0;
 
   constructor(editor: PieceTextEditor) {
     this.editor = editor;
@@ -630,7 +648,7 @@ class PieceSelection {
 
   private checkVersion() {
     if (this.version !== this.editor.version) {
-      throw new Error("Editor modified. Selection no longer valid")
+      throw new Error("Editor modified. Selection no longer valid");
     }
   }
 
@@ -642,7 +660,7 @@ class PieceSelection {
     this.checkVersion();
     const offset = this.editor.toOffset(position);
     if (offset === undefined) {
-      throw new OutOfBoundsError(position, this.editor.length)
+      throw new OutOfBoundsError(position, this.editor.length);
     }
     this.offset = this.editor.toOffset(position);
     this.length = length;
@@ -659,7 +677,11 @@ class PieceSelection {
       const diff = this.offset - newOffset;
       this.offset = newOffset;
       this.length += diff;
-    } else if (newOffset && this.offset && newOffset > this.offset + this.length) {
+    } else if (
+      newOffset &&
+      this.offset &&
+      newOffset > this.offset + this.length
+    ) {
       this.length += newOffset - (this.offset + this.length);
     }
   }
@@ -708,7 +730,7 @@ class PieceSelection {
     this.checkVersion();
 
     if (this.offset === undefined) {
-      throw new NoSelectionError()
+      throw new NoSelectionError();
     }
 
     const start = this.offset + this.length;
@@ -731,7 +753,7 @@ class PieceSelection {
     this.checkVersion();
 
     if (this.offset === undefined) {
-      throw new NoSelectionError()
+      throw new NoSelectionError();
     }
 
     const start = this.offset + this.length;
@@ -753,10 +775,10 @@ class PieceSelection {
     this.checkVersion();
 
     if (this.offset === undefined) {
-      throw new NoSelectionError()
+      throw new NoSelectionError();
     }
     const docLength = this.editor.length;
-    const remaining = docLength - (this.offset + this.length)
+    const remaining = docLength - (this.offset + this.length);
 
     this.length += remaining;
   }
@@ -767,9 +789,9 @@ function repeat(n: number, f: () => void) {
 }
 
 function iterable<T>(createIterator: () => Iterator<T>): Iterable<T> {
-  return new class implements Iterable<T> {
+  return new (class implements Iterable<T> {
     [Symbol.iterator](): Iterator<T> {
       return createIterator();
     }
-  }
+  })();
 }

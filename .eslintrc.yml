@@ -4,6 +4,8 @@ env:
 extends:
   - eslint:recommended
   - plugin:@typescript-eslint/recommended
+  - './node_modules/gts'
+  - prettier
 overrides: []
 parser: '@typescript-eslint/parser'
 parserOptions:
@@ -11,4 +13,7 @@ parserOptions:
   sourceType: module
 plugins:
   - '@typescript-eslint'
-rules: {}
+  - 'prettier'
+rules: {
+  'prettier/prettier': 'error'
+}
