@@ -1,6 +1,6 @@
 {
   "name": "piece-buffer",
-  "version": "0.1.7-beta.19",
+  "version": "0.1.7-beta.20",
   "description": "A lightweight implementation of a Piece Buffer - an efficient data structure for storing and modifying text.",
   "directories": {
     "doc": "docs"
