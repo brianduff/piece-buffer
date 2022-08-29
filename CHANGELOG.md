@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.11](https://github.com/brianduff/piece-buffer/compare/v0.1.10...v0.1.11) (2022-08-29)
+
+
+### Bug Fixes
+
+* a bug in insert() where it would truncate text after the insertion position. ([a548b03](https://github.com/brianduff/piece-buffer/commit/a548b03a1b366201bb30e244ada115e1d4f22fef))
+
 ## [0.1.10](https://github.com/brianduff/piece-buffer/compare/v0.1.9...v0.1.10) (2022-08-29)
 
 
