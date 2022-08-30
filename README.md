@@ -2,7 +2,9 @@
 
 [![npm version](https://badge.fury.io/js/piece-buffer.svg)](https://badge.fury.io/js/piece-buffer) [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/brianduff/piece-buffer/piece-buffer)](https://github.com/brianduff/piece-buffer/actions)
 
-This is a lightweight implementation of a Piece Buffer - an efficient data structure for storing and modifying text.
+This is a lightweight implementation of a Piece Buffer - an efficient data structure for storing and modifying text. This is based on, and inspired by the ideas of VSCode's [Text Buffer Implementation](https://code.visualstudio.com/blogs/2018/03/23/text-buffer-reimplementation).
+
+Note: this is usable, but it's an experimental side project for my own learning, not something that's intended to be necessarily used outside of other side projects. It still needs lots of optimization. Use at your own risk! :)
 
 ## Installation
 
