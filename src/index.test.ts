@@ -115,10 +115,34 @@ test("Sample works", () => {
   expect(editor.toString()).toEqual("Hello Cool World. Goodbye!");
 });
 
+test("Line and column position sample works", () => {
+  const editor = createEditor("Hello\nPiece\nBuffer\n");
+  editor.insert({ line: 1, column: 5 }, "meal");
+  expect(editor.toString()).toEqual("Hello\nPiecemeal\nBuffer\n");
+});
+
 test("Selection sample works", () => {
   const editor = createEditor("Hello World.");
   const selection = editor.createSelection();
   selection.selectFirst("World");
   selection.replace("Piece Buffer");
   expect(editor.toString()).toEqual("Hello Piece Buffer.");
+});
+
+test("Sample iterate lines", () => {
+  const editor = createEditor("Hello\nPiece\nBuffer\n");
+  const arr = [];
+  for (const line of editor.lines()) {
+    arr.push(line);
+  }
+  expect(arr).toEqual(["Hello", "Piece", "Buffer", ""]);
+});
+
+test("Sample iterate linesMatching", () => {
+  const editor = createEditor("Hello\nPiece\nBuffer\n");
+  const arr = [];
+  for (const line of editor.linesMatching(/^P/)) {
+    arr.push(`Line ${line[2]} (${line[1]}) matched: ${line[0][0]}`);
+  }
+  expect(arr).toEqual(["Line 1 (Piece) matched: P"]);
 });

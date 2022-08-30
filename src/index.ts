@@ -138,10 +138,7 @@ export interface TextEditor {
    * @param pattern - an optional regular expression or string. Only matching
    *    lines will be returned by the iterator.
    */
-  lines: (
-    start?: number,
-    pattern?: RegExp | string
-  ) => Iterable<LineAndLineNumber>;
+  lines: () => Iterable<string>;
 
   /**
    * Iterates over lines in this document which match the given pattern.
@@ -358,8 +355,11 @@ class PieceTextEditor implements TextEditor {
     return new PieceSelection(this);
   }
 
-  lines(start?: number): Iterable<LineAndLineNumber> {
-    return iterable(() => new LineIterator(this, start));
+  *lines(): Iterable<string> {
+    const it = iterable(() => new LineIterator(this, 0));
+    for (const x of it) {
+      yield x[0];
+    }
   }
 
   linesMatching(
