@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.0](https://github.com/brianduff/piece-buffer/compare/v0.1.12...v0.2.0) (2022-08-30)
+
+
+### Features
+
+* make lines() just yield lines, not line numbers. ([98ac563](https://github.com/brianduff/piece-buffer/commit/98ac563e652836592003e7b5b950108223fe717f))
+
+
+### Bug Fixes
+
+* add missing .swcrc ([0323547](https://github.com/brianduff/piece-buffer/commit/03235477032dde53753878acbe472d38fa01fdb4))
+* make build link to github actions ([a02a3a5](https://github.com/brianduff/piece-buffer/commit/a02a3a5d503946a62af6107f7ed5e7b1bdc0003d))
+
 ## [0.1.12](https://github.com/brianduff/piece-buffer/compare/v0.1.11...v0.1.12) (2022-08-29)
 
 
